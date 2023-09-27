@@ -3,6 +3,16 @@ MLOPS-cifar-10
 
 Image Classification with cifar10 dataset for MLOps course.
 
+
+
+The dataset card is available under this link: https://github.com/MLOps-essi-upc/MLOPS-cifar10/blob/main/Dataset_card_Cifar10.md
+
+The model card is available under this link:[ https://github.com/MLOps-essi-upc/MLOPS-cifar10/blob/main/Image%20Classification_model_card.md
+
+The cloud provider chosen by the team is Amazon Web Services.
+
+
+
 Project Organization
 ------------
 
