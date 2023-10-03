@@ -5,7 +5,7 @@ Image Classification with cifar10 dataset for MLOps course.
 
 
 
-The dataset card is available under this link: [Dataset Card](https://github.com/MLOps-essi-upc/MLOPS-cifar10/blob/master/docs/Dataset_card.md)
+The dataset card is available under this link: [Dataset Card](https://github.com/MLOps-essi-upc/MLOPS-cifar10/blob/master/docs/Dataset_card_Cifar10.md)
 
 
 
