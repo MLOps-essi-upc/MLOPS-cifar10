@@ -10,7 +10,7 @@
 # Model Card for Image Classification
 
 <!-- Provide a quick summary of what the model is/does. [Optional] -->
-The goal of this model is to classify a given image into one of 10 classes from cifar10 dataset (airplane, automobile, bird, cat, frog, deer, dog, horse, ship or truck) with an accuracy of at least 90%.
+The goal of this model is to classify a given image into one of 10 classes from cifar10 dataset (airplane, automobile, bird, cat, frog, deer, dog, horse, ship or truck) with an accuracy of at least 95%.
 
 
 
