@@ -59,7 +59,7 @@ The goal of this model is to classify a given image into one of 10 classes from 
 ## Model Description
 
 <!-- Provide a longer summary of what this model is/does. -->
-The goal of this model is to classify a given image into one of 10 different classes with an accuracy of at least 90%.
+The goal of this model is to classify a given image into one of 10 different classes with an accuracy of at least 95%.
 
 - **Developed by:** Leandra Moonsammy, Dorota Solarska, David Carela, Edu Masip
 - **Shared by [Optional]:** Leandra Moonsammy, Dorota Solarska, David Carela, Edu Masip
