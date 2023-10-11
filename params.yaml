@@ -1,0 +1,11 @@
+prepare:
+  train_size: 0.8
+  test_size: 0.2
+  random_state: 2023
+train:
+  algorithm: "InceptionV3"
+  random_state: 2023
+  batch_size: 32 
+  num_epochs: 10 
+  zoom_range: 0.2
+  horizontal_flip: False
