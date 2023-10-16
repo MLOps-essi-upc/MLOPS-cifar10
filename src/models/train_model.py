@@ -47,7 +47,7 @@ with mlflow.start_run():
         input_shape = (32, 32, 3)
 
     # Get Train dataset as Generator
-    train_generator = load_train_dataset(params, input_folder_path, input_size)
+    train_generator = load_dataset(params, input_folder_path, input_size)
 
     imagenet_base_model = algorithm(weights='imagenet', include_top=False, input_shape=input_shape)
     
