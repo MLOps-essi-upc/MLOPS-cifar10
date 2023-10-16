@@ -13,7 +13,7 @@ def create_image_generator(params):
     )
     return datagen
 
-def load_train_dataset(params, input_folder_path, input_size):
+def load_dataset(params, input_folder_path, input_size):
     datagen = create_image_generator(params)
     train_generator = datagen.flow_from_directory(
         input_folder_path,
@@ -22,16 +22,6 @@ def load_train_dataset(params, input_folder_path, input_size):
         class_mode='categorical'
     )
     return train_generator
-
-def load_test_dataset(params, input_folder_path, input_size):
-    datagen = create_image_generator(params)
-    test_generator = datagen.flow_from_directory(
-        input_folder_path,
-        target_size=input_size,
-        batch_size=params["batch_size"],
-        class_mode='categorical'
-    )
-    return test_generator
 
 def readDataPreparationParams(key):
     # Path of the parameters file
