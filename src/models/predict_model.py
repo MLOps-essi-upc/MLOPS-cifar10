@@ -7,7 +7,7 @@ import numpy as np
 
 from tensorflow.keras.applications import InceptionV3, VGG16
 from tensorflow.keras.models import load_model
-from sklearn.metrics import f1_score  # Import f1_score
+from sklearn.metrics import mean_absolute_error, mean_squared_error, f1_score
 
 
 #from codecarbon import EmissionsTracker
@@ -56,4 +56,8 @@ with mlflow.start_run():
     y_pred = loaded_model.predict(test_generator)
     y_pred = y_pred.argmax(axis=-1)  # Convert predicted probabilities to class labels
     f1score = f1_score(y_true, y_pred, average='weighted')
+    mae = mean_absolute_error(y_true, y_pred)
+    mse = mean_squared_error(y_true, y_pred)
     mlflow.log_metric("evaluation_f1score", f1score)
+    mlflow.log_metric("mean_absolute_error", mae)
+    mlflow.log_metric("mean_squared_error", mse)
