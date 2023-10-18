@@ -5,6 +5,7 @@ prepare:
 train:
   algorithm: "InceptionV3"
   random_state: 2023
+  input_size: 75
   batch_size: 32 
   num_epochs: 10 
   zoom_range: 0.2
