@@ -1,20 +1,22 @@
+"""
+This script contains code for making predictions using a pre-trained machine learning model.
+It includes functions to load model parameters from a YAML file and prepare data for model input.
+"""
+
 from pathlib import Path
 
-import mlflow, time, pickle, sys, yaml
+import mlflow
 
 import tensorflow as tf
 import numpy as np
 
-from tensorflow.keras.applications import InceptionV3, VGG16
-from tensorflow.keras.models import load_model
 from sklearn.metrics import mean_absolute_error, mean_squared_error, f1_score
+
+from src.models.utils import read_data_preparation_params, load_dataset
+from src import TEST_DATA_DIR
 
 
 #from codecarbon import EmissionsTracker
-
-sys.path.append('/home/w4z3/Git/MLOPS-cifar10')
-from src import MODELS_DIR, TEST_DATA_DIR
-from utils import *
 
 model_folder_path = Path("models")
 
@@ -26,20 +28,20 @@ with mlflow.start_run():
     input_folder_path = TEST_DATA_DIR
 
     # Get preparation parameters
-    params = readDataPreparationParams("train")
+    params = read_data_preparation_params("train")
+
+    # `random_state` for the sake of reproducibility for tensorflow and numpy.
+    tf.random.set_seed(params["random_state"])
+    np.random.seed(params["random_state"])
 
     # Load the model
-    loaded_model = load_model(model_folder_path / "imagenet_model_cifar10.h5")
-    
+    loaded_model = tf.keras.models.load_model(model_folder_path / "imagenet_model_cifar10.h5")
+
     # Specify the model
     if params["algorithm"] == "InceptionV3":
-        algorithm = InceptionV3
-        input_size = (75, 75)
-        input_shape = (75, 75, 3)
-    elif params["algorithm"] == "VGG16":
-        algorithm = VGG16
-        input_size = (32, 32)
-        input_shape = (32, 32, 3)
+        algorithm = tf.keras.applications.InceptionV3
+        input_size = (params["input_size"], params["input_size"])
+        input_shape = (params["input_size"], params["input_size"], 3)
 
     # Get Test dataset as Generator
     test_generator = load_dataset(params, input_folder_path, input_size)
