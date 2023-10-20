@@ -10,6 +10,10 @@ import yaml
 
 import tensorflow as tf
 
+ROOT_DIR = Path(Path().resolve())
+TRAIN_DATA_DIR = ROOT_DIR / "data/train"
+TEST_DATA_DIR = ROOT_DIR / "data/test"
+MODELS_DIR = ROOT_DIR / "models"
 
 def create_image_generator(params):
     """

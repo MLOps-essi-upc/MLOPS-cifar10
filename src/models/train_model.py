@@ -11,15 +11,18 @@ import mlflow
 import tensorflow as tf
 import numpy as np
 
-from src.models.utils import read_data_preparation_params, load_dataset
-from src import MODELS_DIR, TRAIN_DATA_DIR
+from utils import read_data_preparation_params, load_dataset, MODELS_DIR, TRAIN_DATA_DIR
 #from codecarbon import EmissionsTracker
-
 
 mlflow.set_experiment("cifar10")
 mlflow.sklearn.autolog(log_model_signatures=False, log_datasets=False)
 
 with mlflow.start_run():
+    mlflow.log_params({
+        "model_name": "NN_ImageNet_base_cifar10",
+        "dataset_name": "CIFAR-10 Train"  
+    })
+
     # Path of the prepared data folder
     input_folder_path = TRAIN_DATA_DIR
 
@@ -68,3 +71,6 @@ with mlflow.start_run():
 
     # Save the model with TensorFlow methods to ensure compatibility and integrity.
     imagenet_model.save(MODELS_DIR/'imagenet_model_cifar10.h5')
+
+    # Save artifact
+    mlflow.tensorflow.log_model(imagenet_model, "cifar10_NN_imageNet_model")
