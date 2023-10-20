@@ -10,11 +10,9 @@ import mlflow
 import tensorflow as tf
 import numpy as np
 
-from sklearn.metrics import mean_absolute_error, mean_squared_error, f1_score
+from sklearn.metrics import f1_score, accuracy_score, confusion_matrix, log_loss
 
-from src.models.utils import read_data_preparation_params, load_dataset
-from src import TEST_DATA_DIR
-
+from utils import read_data_preparation_params, load_dataset, TEST_DATA_DIR
 
 #from codecarbon import EmissionsTracker
 
@@ -24,6 +22,10 @@ mlflow.set_experiment("cifar10")
 mlflow.sklearn.autolog(log_model_signatures=False, log_datasets=False)
 
 with mlflow.start_run():
+    mlflow.log_params({
+        "model_name": "NN_ImageNet_base_cifar10",
+        "dataset_name": "CIFAR-10 Test"  
+    })
     # Path of the test data folder
     input_folder_path = TEST_DATA_DIR
 
@@ -58,8 +60,6 @@ with mlflow.start_run():
     y_pred = loaded_model.predict(test_generator)
     y_pred = y_pred.argmax(axis=-1)  # Convert predicted probabilities to class labels
     f1score = f1_score(y_true, y_pred, average='weighted')
-    mae = mean_absolute_error(y_true, y_pred)
-    mse = mean_squared_error(y_true, y_pred)
-    mlflow.log_metric("evaluation_f1score", f1score)
-    mlflow.log_metric("mean_absolute_error", mae)
-    mlflow.log_metric("mean_squared_error", mse)
+    accuracy = accuracy_score(y_true, y_pred)
+    mlflow.log_metric("f1_score", f1score)
+    mlflow.log_metric("accuracy_score", accuracy)

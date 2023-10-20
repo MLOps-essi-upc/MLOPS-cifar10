@@ -26,11 +26,14 @@ import pickle
 import pytest
 
 import tensorflow as tf
-from sklearn.metrics import mean_absolute_error, mean_squared_error, f1_score
+from sklearn.metrics import f1_score, accuracy_score, confusion_matrix, log_loss
 
 from src.models.utils import load_dataset, read_data_preparation_params
 from src import MODELS_DIR, TEST_DATA_DIR
 
+# Constants
+F1_SCORE_THRESHOLD = 0.6
+ACCURACY_THRESHOLD = 0.7
 
 @pytest.fixture
 def cifar_model_pickle():
@@ -65,27 +68,35 @@ def cifar10_validation_data():
     return load_dataset(params, TEST_DATA_DIR, (32, 32))
 
 
-def test_cifar_model(cifar_model_h5, cifar10_validation_data):
+def test_cifar_model_f1score(cifar_model_pickle, cifar10_validation_data):
     """
-    Test function to evaluate the CIFAR-10 model's performance using metrics like F1 score, 
-    mean absolute error, and mean squared error.
+    Test function to evaluate the CIFAR-10 model's performance using F1 score metric.
 
     Args:
         cifar_model_h5 (object): The pre-trained CIFAR-10 model.
         cifar10_validation_data (object): CIFAR-10 validation data.
     """
     y_true = cifar10_validation_data.classes
-    y_pred = cifar_model_h5.predict(cifar10_validation_data)
+    y_pred = cifar_model_pickle.predict(cifar10_validation_data)
     y_pred = y_pred.argmax(axis=-1)  # Convert predicted probabilities to class labels
     f1score = f1_score(y_true, y_pred, average='weighted')
-    mae = mean_absolute_error(y_true, y_pred)
-    mse = mean_squared_error(y_true, y_pred)
+    assert f1score >= F1_SCORE_THRESHOLD
 
-    assert f1score >= 0.1
-    assert mae < 3.3
-    assert mse < 16.5
+def test_cifar_model_accuracy(cifar_model_pickle, cifar10_validation_data):
+    """
+    Test function to evaluate the CIFAR-10 model's performance using accuracy metric.
 
-def test_classification_cifar_model(cifar_model_h5, cifar10_validation_data):
+    Args:
+        cifar_model_h5 (object): The pre-trained CIFAR-10 model.
+        cifar10_validation_data (object): CIFAR-10 validation data.
+    """
+    y_true = cifar10_validation_data.classes
+    y_pred = cifar_model_pickle.predict(cifar10_validation_data)
+    y_pred = y_pred.argmax(axis=-1)
+    accuracy = accuracy_score(y_true, y_pred)
+    assert accuracy >= ACCURACY_THRESHOLD
+
+def test_classification_cifar_model(cifar_model_pickle, cifar10_validation_data):
     """
     Test function to validate the classification of a single CIFAR-10 image and ensure that 
     the prediction matches the correct label.
@@ -94,7 +105,7 @@ def test_classification_cifar_model(cifar_model_h5, cifar10_validation_data):
         cifar_model_h5 (object): The pre-trained CIFAR-10 model.
         cifar10_validation_data (object): CIFAR-10 validation data.
     """
-    y_pred_single = cifar_model_h5.predict(cifar10_validation_data)
+    y_pred_single = cifar_model_pickle.predict(cifar10_validation_data)
     correct_class = cifar10_validation_data.classes[0]
     predicted_class = y_pred_single[0].argmax()
     assert predicted_class == correct_class, "Prediction does not match the correct label."
