@@ -1,0 +1,15 @@
+artifact_uri: file:///home/w4z3/Git/MLOPS-cifar10/src/mlruns/948145791558298669/3425c16797134bd3b2c8490094d1a4a8/artifacts
+end_time: 1700415710924
+entry_point_name: ''
+experiment_id: '948145791558298669'
+lifecycle_stage: active
+run_id: 3425c16797134bd3b2c8490094d1a4a8
+run_name: masked-elk-84
+run_uuid: 3425c16797134bd3b2c8490094d1a4a8
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1700415710919
+status: 4
+tags: []
+user_id: w4z3

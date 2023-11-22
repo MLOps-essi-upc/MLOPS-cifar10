@@ -50,7 +50,9 @@ def load_dataset(params, input_folder_path, input_size):
         input_folder_path,
         target_size=input_size,
         batch_size=params["batch_size"],
-        class_mode='categorical'
+        class_mode='categorical',
+        seed=0,
+        shuffle=False
     )
     return generator
 
@@ -66,7 +68,7 @@ def read_data_preparation_params(key):
         or None if there was an error.
     """
     # Path of the parameters file
-    params_path = Path("params.yaml")
+    params_path = Path(ROOT_DIR / "params.yaml")
 
     # Read data preparation parameters
     with open(params_path, "r", encoding='utf-8') as params_file:
