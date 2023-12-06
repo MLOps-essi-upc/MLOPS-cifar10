@@ -161,5 +161,6 @@ cython_debug/
 
 #CUSTOM
 /data
-/src/mlruns/*
+/src/mlruns/
+/mlruns/
 myenv/
