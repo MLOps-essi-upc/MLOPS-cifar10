@@ -1,0 +1,80 @@
+/* styles.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    margin: 0;
+    padding: 0.5rem 2rem;
+}
+
+h1 {
+    color: #007bff;
+}
+
+form {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#result {
+    margin-top: 20px;
+}
+
+.result-container {
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.message {
+    color: #007bff;
+}
+
+.predicted-class {
+    margin-bottom: 15px;
+}
+
+table.probabilities {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table.probabilities th, table.probabilities td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table.probabilities th {
+    background-color: #f2f2f2;
+}
+
+table.probabilities tr.predicted-class-row {
+    background-color: #ffeeba; /* Set the background color as desired */
+}
