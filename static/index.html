@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload Enpoint for Cifar-10 prediction</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+</head>
+<body>
+    <h1>Image Upload Endpoint for Cifar-10 prediction</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById("upload-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            try {
+                const response = await fetch("/prediction", {
+                    method: "POST",
+                    body: formData,
+                });
+                
+                const result = await response.json();
+                document.getElementById("result").innerHTML = `
+                    <div class="result-container">
+                        <p>Predicted Class: <b>${result["data"]["predicted_class"]}</b></p>
+                        <p>Elapsed Time: <b>${result["elapsed-time"]} seconds</b></p>
+                        <table class="probabilities">
+                            <tr>
+                                <th>Class Type</th>
+                                <th>Probability</th>
+                            </tr>
+                            ${Object.entries(result["data"]["probabilities"]).map(([label, probability]) => `
+                                <tr class="${label === result["data"]["predicted_class"] ? 'predicted-class-row' : ''}">
+                                    <td>${label}</td>
+                                    <td>${probability.toFixed(4)}</td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </div>
+                `;
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });
+    </script>
+</body>
+</html>
