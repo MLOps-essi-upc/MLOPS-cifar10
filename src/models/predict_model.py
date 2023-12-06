@@ -10,7 +10,7 @@ import mlflow
 import tensorflow as tf
 import numpy as np
 
-from sklearn.metrics import f1_score, accuracy_score, confusion_matrix, log_loss
+from sklearn.metrics import f1_score, accuracy_score
 
 from utils import read_data_preparation_params, load_dataset, TEST_DATA_DIR
 
@@ -19,7 +19,7 @@ from utils import read_data_preparation_params, load_dataset, TEST_DATA_DIR
 model_folder_path = Path("models")
 
 mlflow.set_experiment("cifar10")
-mlflow.sklearn.autolog(log_model_signatures=False, log_datasets=False)
+mlflow.tensorflow.autolog(log_model_signatures=False, log_datasets=False)
 
 with mlflow.start_run():
     mlflow.log_params({
@@ -56,10 +56,10 @@ with mlflow.start_run():
     mlflow.log_metric("evaluation_accuracy", accuracy)
 
     # Calculate F1 score
-    y_true = test_generator.classes
-    y_pred = loaded_model.predict(test_generator)
-    y_pred = y_pred.argmax(axis=-1)  # Convert predicted probabilities to class labels
-    f1score = f1_score(y_true, y_pred, average='weighted')
-    accuracy = accuracy_score(y_true, y_pred)
+    predictions = loaded_model.predict(test_generator)
+    true_labels = test_generator.classes
+    predicted_labels = tf.argmax(predictions, axis=1)
+    f1score = f1_score(true_labels, predicted_labels, average='weighted')
+    accuracy = accuracy_score(true_labels, predicted_labels)
     mlflow.log_metric("f1_score", f1score)
     mlflow.log_metric("accuracy_score", accuracy)

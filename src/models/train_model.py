@@ -15,7 +15,7 @@ from utils import read_data_preparation_params, load_dataset, MODELS_DIR, TRAIN_
 #from codecarbon import EmissionsTracker
 
 mlflow.set_experiment("cifar10")
-mlflow.sklearn.autolog(log_model_signatures=False, log_datasets=False)
+mlflow.tensorflow.autolog(log_model_signatures=False, log_datasets=False)
 
 with mlflow.start_run():
     mlflow.log_params({
@@ -46,7 +46,9 @@ with mlflow.start_run():
     # Get Train dataset as Generator
     train_generator = load_dataset(params, input_folder_path, input_size)
 
-    imagenet_base_model = algorithm(weights='imagenet', include_top=False, input_shape=input_shape)
+    imagenet_base_model = algorithm(weights='imagenet', 
+                                    include_top=False, 
+                                    input_shape=input_shape)
 
     for layer in imagenet_base_model.layers:
         layer.trainable = False
