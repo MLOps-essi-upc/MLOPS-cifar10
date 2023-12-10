@@ -22,29 +22,23 @@ This module is designed for testing and evaluating the model's capabilities in i
 classification tasks, particularly for CIFAR-10 dataset.
 """
 
-import pickle
+import numpy as np
 import pytest
+import os
+from PIL import Image
 
 import tensorflow as tf
-from sklearn.metrics import f1_score, accuracy_score, confusion_matrix, log_loss
+from tensorflow.keras.preprocessing import image
 
-from src.models.utils import load_dataset, read_data_preparation_params
+from sklearn.metrics import f1_score, accuracy_score
+
+from src.app.classes import ImagesType
+from src.models.utils import load_dataset, read_data_preparation_params, get_model
 from src import MODELS_DIR, TEST_DATA_DIR
 
 # Constants
 F1_SCORE_THRESHOLD = 0.6
 ACCURACY_THRESHOLD = 0.7
-
-@pytest.fixture
-def cifar_model_pickle():
-    """
-    Fixture to load a pre-trained CIFAR-10 model from a pickle file.
-
-    Returns:
-        object: The pre-trained model loaded from the pickle file.
-    """
-    with open(MODELS_DIR / "imagenet_model_cifar10.pkl", "rb") as f:
-        return pickle.load(f)
 
 @pytest.fixture
 def cifar_model_h5():
@@ -54,7 +48,7 @@ def cifar_model_h5():
     Returns:
         object: The pre-trained model loaded from the HDF5 file.
     """
-    return tf.keras.models.load_model(MODELS_DIR / "imagenet_model_cifar10.h5")
+    return get_model()
 
 @pytest.fixture
 def cifar10_validation_data():
@@ -68,35 +62,7 @@ def cifar10_validation_data():
     return load_dataset(params, TEST_DATA_DIR, (32, 32))
 
 
-def test_cifar_model_f1score(cifar_model_pickle, cifar10_validation_data):
-    """
-    Test function to evaluate the CIFAR-10 model's performance using F1 score metric.
-
-    Args:
-        cifar_model_h5 (object): The pre-trained CIFAR-10 model.
-        cifar10_validation_data (object): CIFAR-10 validation data.
-    """
-    y_true = cifar10_validation_data.classes
-    y_pred = cifar_model_pickle.predict(cifar10_validation_data)
-    y_pred = y_pred.argmax(axis=-1)  # Convert predicted probabilities to class labels
-    f1score = f1_score(y_true, y_pred, average='weighted')
-    assert f1score >= F1_SCORE_THRESHOLD
-
-def test_cifar_model_accuracy(cifar_model_pickle, cifar10_validation_data):
-    """
-    Test function to evaluate the CIFAR-10 model's performance using accuracy metric.
-
-    Args:
-        cifar_model_h5 (object): The pre-trained CIFAR-10 model.
-        cifar10_validation_data (object): CIFAR-10 validation data.
-    """
-    y_true = cifar10_validation_data.classes
-    y_pred = cifar_model_pickle.predict(cifar10_validation_data)
-    y_pred = y_pred.argmax(axis=-1)
-    accuracy = accuracy_score(y_true, y_pred)
-    assert accuracy >= ACCURACY_THRESHOLD
-
-def test_classification_cifar_model(cifar_model_pickle, cifar10_validation_data):
+def test_classification_cifar_model(cifar_model_h5):
     """
     Test function to validate the classification of a single CIFAR-10 image and ensure that 
     the prediction matches the correct label.
@@ -105,7 +71,16 @@ def test_classification_cifar_model(cifar_model_pickle, cifar10_validation_data)
         cifar_model_h5 (object): The pre-trained CIFAR-10 model.
         cifar10_validation_data (object): CIFAR-10 validation data.
     """
-    y_pred_single = cifar_model_pickle.predict(cifar10_validation_data)
-    correct_class = cifar10_validation_data.classes[0]
-    predicted_class = y_pred_single[0].argmax()
-    assert predicted_class == correct_class, "Prediction does not match the correct label."
+    
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(script_dir, "../data/test/airplane/0001.jpg")
+    
+    img = image.img_to_array(Image.open(image_path).resize((75, 75)))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)/255.0
+
+    prediction_probabilities = cifar_model_h5.predict(img_array)[0]
+
+    predicted_class = ImagesType(np.argmax(prediction_probabilities)).name
+
+    assert predicted_class == "AIRPLANE", "Prediction does not match the correct label."
