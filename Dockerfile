@@ -10,7 +10,7 @@ RUN pip install -r requirements.txt
 
 COPY ./models /app/models 
 
-COPY ./src .
+COPY ./src /src
 
 COPY ./static /app/static 
 
