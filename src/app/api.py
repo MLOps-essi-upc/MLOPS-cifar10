@@ -63,7 +63,7 @@ async def prediction(file: UploadFile = File(...)):
 
     # Ensure the uploaded file is an image
     if not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="File must be an image")
+        raise HTTPException(status_code=400, detail="Invalid file, only JPG allowed")
 
     content = await file.read()
     img = image.img_to_array(Image.open(io.BytesIO(content)).resize((75, 75)))
