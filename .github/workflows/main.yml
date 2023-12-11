@@ -31,14 +31,15 @@ jobs:
     
     steps:
       - uses: actions/checkout@v1
-        
-      - name: Docker login
-        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_TOKEN }}
-
       - name: Echo secrets
         run: |
           echo "DOCKER_USER: ${{ secrets.DOCKER_USER }}"
           echo "DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}"
+        
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_TOKEN }}
+
+      
 
         
       - name: Build
