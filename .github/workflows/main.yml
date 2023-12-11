@@ -33,11 +33,11 @@ jobs:
       - uses: actions/checkout@v1
       - name: Echo secrets
         run: |
-          echo "DOCKER_USER: ${{ secrets.DOCKER_USER }}"
+          echo "DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}"
           echo "DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}"
         
       - name: Docker login
-        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_TOKEN }}
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
 
       
 
@@ -47,11 +47,11 @@ jobs:
         
       - name: Tags
         run: |
-          docker tag cifar10_app ${{ secrets.DOCKER_USER }}/cifar10_app:${{ github.sha }}
-          docker tag cifar10_app ${{ secrets.DOCKER_USER }}/cifar10_app:latest
+          docker tag cifar10_app ${{ secrets.DOCKER_USERNAME }}/cifar10_app:${{ github.sha }}
+          docker tag cifar10_app ${{ secrets.DOCKER_USERNAME }}/cifar10_app:latest
           
       - name: Push
         run: |
-          docker push ${{ secrets.DOCKER_USER }}/cifar10_app:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_USER }}/cifar10_app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/cifar10_app:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/cifar10_app:latest
           
