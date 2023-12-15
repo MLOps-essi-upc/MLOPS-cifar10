@@ -18,3 +18,4 @@ class ImagesType(Enum):
     HORSE = 7
     SHIP = 8
     TRUCK = 9
+    
