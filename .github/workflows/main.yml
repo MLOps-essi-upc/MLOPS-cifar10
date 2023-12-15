@@ -20,13 +20,13 @@ jobs:
       with:
         python-version: '3.9'
         
-    - name: Install & Test
+    - name: Install & Train & Test
       run: |
         pip install -r requirements.txt
         pip install pytest
-        
-        
-        
+        python3 -m ./src/models/train_model.py
+        python3 -m pytest ./tests/
+                
    
   cd:
     runs-on: ubuntu-latest
@@ -35,9 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Train Model
-        run: python3 -m ./src/models/train_model.py
-        
       - name: Echo secrets
         run: |
           echo "DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}"
