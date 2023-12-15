@@ -1,8 +1,8 @@
 """Main script for the fastAPI: API initialization and endpoints for the users."""
 
 import io
+import time
 from http import HTTPStatus
-import pandas as pd
 
 from fastapi import FastAPI, UploadFile, HTTPException, File, APIRouter
 from fastapi.responses import HTMLResponse, FileResponse
@@ -10,8 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 
-import time
-from tensorflow.keras.preprocessing import image
+import tensorflow as tf
 import numpy as np
 from PIL import Image
 
@@ -23,10 +22,11 @@ model = get_model()
 # Define application
 app = FastAPI(
     title="Cifar 10 Classifier",
-    description="""This API facilitates the application of the InceptionV3 algorithm trained on the ImageNet dataset 
-                    for making predictions with the Cifar 10 Classifier. Users can harness the power of InceptionV3, 
-                    a state-of-the-art convolutional neural network, to achieve accurate and sophisticated image 
-                    classification within the context of the Cifar 10 dataset.""",
+    description="""This API facilitates the application of the InceptionV3 algorithm trained on the
+                    ImageNet dataset for making predictions with the Cifar 10 Classifier. Users can
+                    harness the power of InceptionV3, a state-of-the-art convolutional neural network,
+                    to achieve accurate and sophisticated image classification within the context of
+                    the Cifar 10 dataset.""",
     version="0.1",
 )
 
@@ -66,8 +66,9 @@ async def prediction(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="Invalid file, only JPG allowed")
 
     content = await file.read()
-    img = image.img_to_array(Image.open(io.BytesIO(content)).resize((75, 75)))
-    img_array = image.img_to_array(img)
+    img = tf.keras.preprocessing.image.img_to_array(Image.open(io.BytesIO(content))
+                                                    .resize((75, 75)))
+    img_array = tf.keras.preprocessing.image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)/255.0
     st = time.time()
     prediction_probabilities = model.predict(img_array)[0]
@@ -84,6 +85,10 @@ async def prediction(file: UploadFile = File(...)):
         "elapsed-time": round(et-st,4)
     }
 
+
 @app.get("/", response_class=HTMLResponse)
 async def get_upload_page():
+    """
+    Method to load the Frontend files with the Fast API
+    """
     return FileResponse("static/index.html")
